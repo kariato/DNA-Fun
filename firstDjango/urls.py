@@ -13,10 +13,24 @@ Including another URLconf
     1. Add an import:  from blog import urls as blog_urls
     2. Add a URL to urlpatterns:  url(r'^blog/', include(blog_urls))
 """
-from django.conf.urls import include, url
+from django.conf.urls import patterns, include, url
 from django.contrib import admin
+admin.autodiscover()
 
-urlpatterns = [
+urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
-    url(r'', 'main.views.Home')
-]
+    url(r'^$', 'main.views.Home', name='reports_home')
+)
+
+
+urlpatterns += patterns(
+    'django.contrib.auth.views',
+
+    url(r'^login/$', 'login',
+        {'template_name': 'login.html'},
+       name='reports_login'),
+
+     url(r'^logout/$', 'logout',
+        {'next_page': 'reports_home'},
+        name='reports_logout'),
+)
